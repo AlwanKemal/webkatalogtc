@@ -33,40 +33,112 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
+            @if (Auth::user()->role_id == 1)
+            <h5 class="mt-4">History</h5>
             <div class="row mt-4">
-                <div class="col-md-6">
-                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalRepair">
-                        <div class="card">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <img src="{{ asset('images/illustration_repair.png') }}" alt="home"
-                                        class="img-fluid" width="172px" height="130px">
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 class="mt-4">
-                                        Booking
-                                    </h5>
-                                    <h5>for <b style="color: #6D378F">Repairs</b></h5>
+                <div class="col-md-12">
+                    @if ($history != "")
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Vehicle</th>
+                                    <th scope="col">Service</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($history as $data)
+                                    <tr>
+                                        <td>{{ $data->name }}</td>
+                                        <td>{{ $data->service_type }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->date)->format('M d, Y') }}</td>
+                                        <td>
+                                            <form action="{{ route('home.deleteHistory', $data->id) }}" method="post" class="d-inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-link text-decoration-none" style="color: black !important" onclick="return confirm('Are you sure you want to delete this history record?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
 
-                                </div>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p class="text-center col-md-12" style="color: gray">You don't have any history yet</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <h5 class="mb-1">
+                                    List user Vehicles
+                                </h5>
+                                <p>{{ $count }} Vehicles</p>
+                            </div>
+                            <div class="col-sm-5 mt-3">
+                                <a href="#" class="text-decoration-none" data-bs-toggle="modal"
+                                    data-bs-target="#modalVehicle">
+                                    <i class="fas fa-plus"></i>
+                                    <span class="ms-2">Add Vehicle</span>
+                                </a>
                             </div>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-6">
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            @if ($vehicle == "")
+                                <p class="text-center" style="color: gray">You don't have any vehicle yet</p>
+                            @else
+                            @foreach ($vehicle as $car)
+                            <tr>
+                                <td class="pe-lg-5">{{ $car->name }}</td>
+                                <td class="ps-lg-5 pe-2">
+                                    <a href="{{ route('vehicle.edit', ['vehicle' => $car->id]) }}"
+                                        class="text-decoration-none" data-bs-toggle="modal"
+                                        data-bs-target="#modalEditVehicle" data-id="{{ $car->id }}"
+                                        data-name="{{ $car->name }}" data-type="{{ $car->vehicle_type }}"
+                                        data-transmission="{{ $car->transmission }}"
+                                        data-license-plate="{{ $car->license_plate }}"><i class="fas fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <form action="{{ route('vehicle.destroy', ['vehicle' => $car->id]) }}"
+                                        method="post" class="d-inline">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-link text-decoration-none"
+                                            style="color: black !important" onclick="return confirm('Are you sure?')"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @endif
+                        </table>
+                    </div>
+            @else
+            <div class="row mt-4">
+                <div class="col-md-6 col-sm-12">
                     <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalWash">
                         <div class="card">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-6">
                                     <img src="{{ asset('images/illustration_wash.png') }}" alt="home" class="img-fluid"
-                                        width="172px" height="130px">
+                                        width="100%" height="auto">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-6">
                                     <h5 class="mt-4">
                                         Booking
                                     </h5>
                                     <h5>for <b style="color: #6D378F">Wash</b></h5>
-
                                 </div>
                             </div>
                         </div>
@@ -98,7 +170,6 @@
                     @else
                         <p class="text-center col-md-12" style="color: gray">You don't have any history yet</p>
                     @endif
-
                 </div>
             </div>
         </div>
@@ -149,14 +220,13 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
+                            @endforeach
                             @endif
-
-
                         </table>
                     </div>
                 </div>
             </div>
+            @endif          
         </div>
     </div>
     {{-- Modal Add Vehicle --}}

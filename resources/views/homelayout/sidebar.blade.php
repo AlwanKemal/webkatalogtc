@@ -33,11 +33,12 @@
                         <span class="ms-2">Order List</span>
                     </a>
                 </li>
+            @else
                 <li class="nav-item mb-2">
-                    <a class="nav-link {{ request()->is('home/sparepart') ? 'active' : '' }}"
-                        href="{{ route('home.sparepart') }}">
-                        <i class="fas fa-tools"></i>
-                        <span class="ms-2">Sparepart</span>
+                    <a class="nav-link {{ request()->is('home/orderUser/' . Auth::user()->id) ? 'active' : '' }}"
+                        href="{{ route('home.orderUser', Auth::user()->id) }}">
+                        <i class="fas fa-list"></i>
+                        <span class="ms-2">Order List</span>
                     </a>
                 </li>
             @endif

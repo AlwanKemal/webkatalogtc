@@ -1,25 +1,25 @@
 @extends('homelayout.layout')
 
 @section('title')
-    Order List
+    OrderUser
 @endsection
 
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card mt-5">
+            <div class="col-lg-12 col-md-12 col-sm-12 mt-5">
+                <div class="card">
                     <div class="card-header">
                         <h3>Order List</h3>
                     </div>
                     <div class="card-body">
                         @if ($orderlist->isEmpty())
                             <div class="alert alert-danger" role="alert">
-                                <h4 class="alert-heading text-center">No Order List</h4>
-                                <p class="text-center">There is no data order</p>
+                                <h4 class="alert-heading text-center">No Data</h4>
+                                <p class="text-center">There is no data</p>
                             </div>
                         @else
-                            <table class="table" id="tableOrder">
+                            <table class="table table-striped" id="tableInvoice">
                                 <thead>
                                     <tr>
                                         <th scope="col">Booking Date</th>
@@ -58,18 +58,14 @@
                                                     <span class="badge bg-success text-white">Done</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <a href="" class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditBooking" data-id="{{ $order->id }}"
-                                                    data-status="{{ $order->status }}"><i class="fas fa-edit"></i></a>
-                                                <form action="{{ route('booking.destroy', $order->id) }}" method="post"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit" class="btn btn-danger"
+                                            <td>                                         
+                                            <form action="{{ route('home.deleteBooking', $order->id) }}" method="post" class="d-inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-danger"
                                                         onclick="return confirm('Are you sure?')"><i
                                                             class="fas fa-trash"></i></button>
-                                                </form>
+                                            </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -81,5 +77,4 @@
             </div>
         </div>
     </div>
-
 @endsection

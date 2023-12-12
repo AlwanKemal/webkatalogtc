@@ -118,7 +118,6 @@
     </table>
 
     <!-- Display spareparts information -->
-    <h3>Spareparts</h3>
     @if (count($booking->spareparts) > 0)
         <table class="booking-info">
             <tr>
@@ -137,7 +136,7 @@
             </tr>
         </table>
     @else
-        <p>No spareparts added to this booking.</p>
+        <p></p>
     @endif
 
     <!-- Display total price -->
@@ -146,10 +145,6 @@
         <tr>
             <td>Price Service</td>
             <td>Rp {{ number_format(($booking->ammount - $priceSparepart), 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <td>Price Sparepart</td>
-            <td>Rp {{ number_format($priceSparepart, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <th>Total Price</th>

@@ -80,7 +80,7 @@
                                         </tr>
                                     </table>
                                 @else
-                                    <p>No spareparts added to this booking.</p>
+                                    <p></p>
                                 @endif
                             </div>
                         </div>
@@ -89,10 +89,6 @@
                             <tr>
                                 <td scope="col">Service</td>
                                 <td>Rp {{ number_format($booking->ammount, 0, ',', '.') }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="col">Sparepart</td>
-                                <td>Rp {{ number_format($priceSparepart, 0, ',', '.') }}</td>
                             </tr>
                             <tr>
                                 <th scope="col">Total</th>

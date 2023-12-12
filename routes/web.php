@@ -29,10 +29,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     // Home Routes
     Route::get('/home/orderlist', [App\Http\Controllers\HomeController::class, 'orderlist'])->name('home.orderlist');
+    Route::get('/home/orderUser/{id}', [App\Http\Controllers\HomeController::class, 'orderUser'])->name('home.orderUser');
     Route::get('/home/sparepart', [App\Http\Controllers\HomeController::class, 'sparepart'])->name('home.sparepart');
     Route::get('/home/invoice', [App\Http\Controllers\HomeController::class, 'invoice'])->name('home.invoice');
     Route::get('/home/invoiceUser/{id}', [App\Http\Controllers\HomeController::class, 'invoiceUser'])->name('home.invoiceUser');
     Route::get('/home/profile/{id}', [App\Http\Controllers\HomeController::class, 'profile'])->name('home.profile');
+    Route::delete('/home/deleteHistory/{id}', [App\Http\Controllers\HomeController::class, 'deleteHistory'])->name('home.deleteHistory');
+    Route::delete('/home/deleteBooking/{id}', [App\Http\Controllers\HomeController::class, 'deleteBooking'])->name('home.deleteBooking');
 
     // Sparepart Routes
     Route::resource('sparepart', App\Http\Controllers\SparepartController::class);

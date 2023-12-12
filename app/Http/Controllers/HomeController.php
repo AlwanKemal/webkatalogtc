@@ -61,13 +61,32 @@ class HomeController extends Controller
         return view('homepage_view.home', compact('vehicle', 'count', 'history', 'countCarRepair', 'countCarWash', 'countMotorcycleRepair', 'countMotorcycleWash'));
     }
 
+    public function deleteHistory($id)
+    {
+        $history = Booking::find($id);
+        $history->delete();
+        return redirect()->route('home');
+    }
+
     public function orderlist()
     {
         $orderlist = Booking::orderBy('status', 'asc')
             ->orderByRaw("FIELD(status, 'stand_by', 'on_process', 'done')")
             ->get();
-        $spareparts = Sparepart::all();
-        return view('homepage_view.orderlist', compact('orderlist', 'spareparts'));
+        return view('homepage_view.orderlist', compact('orderlist'));
+    }
+
+    public function orderUser($id)
+    {
+        $orderlist = Booking::with(['user'])->where('id_user', $id)->get();
+        return view('homepage_view.orderUser', compact('orderlist'));
+    }
+
+    public function deleteBooking($id)
+    {
+        $orderlist = Booking::find($id);
+        $orderlist->delete();
+        return redirect()->route('home');
     }
 
     public function sparepart()
