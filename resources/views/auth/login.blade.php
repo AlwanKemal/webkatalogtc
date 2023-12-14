@@ -39,8 +39,9 @@
                             now</a></p>
                 </div>
             </div>
-            <div class="dua col-lg-6 col-md-8 col-sm-10 ">
-                <img src="{{ asset('images/illustration_login.png') }}" alt="login" class="img-fluid">
+            <div class="col-md-4 d-flex">
+                <img src="{{ asset('images/illustration_login.png') }}" alt="login" class="img-fluid"
+                    width="360px" height="240px">
             </div>
         </div>
     </div>

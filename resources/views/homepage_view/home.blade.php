@@ -11,8 +11,7 @@
                 <div class="row">
                     <div class="col-md-8 mt-3 mb-2">
                         <h3>Hi, {{ Auth::user()->fullname }}</h3>
-                        <p>Welcome to Ngebengkel, an online workshop reservation service! We are ready to help you to
-                            reserve your vehicle maintenance easily and quickly.</p>
+                        <p>Atur waktu pencucian kendaraan Anda dengan mudah melalui platform kami. Kami menghadirkan kemudahan reservasi online untuk memastikan kendaraan Anda bersinar dalam sekejap.</p>
                         <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalQueue">See
                             Queue</a>
                     </div>
@@ -42,6 +41,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Vehicle</th>
+                                    <th scope="col">Owner</th>
                                     <th scope="col">Service</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Action</th>
@@ -51,6 +51,7 @@
                                 @foreach ($history as $data)
                                     <tr>
                                         <td>{{ $data->name }}</td>
+                                        <td>{{ $data->user->fullname }}</td>
                                         <td>{{ $data->service_type }}</td>
                                         <td>{{ \Carbon\Carbon::parse($data->date)->format('M d, Y') }}</td>
                                         <td>
@@ -94,35 +95,42 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table>
-                            @if ($vehicle == "")
-                                <p class="text-center" style="color: gray">You don't have any vehicle yet</p>
-                            @else
-                            @foreach ($vehicle as $car)
-                            <tr>
-                                <td class="pe-lg-5">{{ $car->name }}</td>
-                                <td class="ps-lg-5 pe-2">
-                                    <a href="{{ route('vehicle.edit', ['vehicle' => $car->id]) }}"
-                                        class="text-decoration-none" data-bs-toggle="modal"
-                                        data-bs-target="#modalEditVehicle" data-id="{{ $car->id }}"
-                                        data-name="{{ $car->name }}" data-type="{{ $car->vehicle_type }}"
-                                        data-transmission="{{ $car->transmission }}"
-                                        data-license-plate="{{ $car->license_plate }}"><i class="fas fa-edit"></i></a>
-                                </td>
-                                <td>
-                                    <form action="{{ route('vehicle.destroy', ['vehicle' => $car->id]) }}"
-                                        method="post" class="d-inline">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-link text-decoration-none"
-                                            style="color: black !important" onclick="return confirm('Are you sure?')"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                            @endif
-                        </table>
+                        <div class="row">
+                            <div class="col">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        @if ($vehicle == "")
+                                            <p class="text-center" style="color: gray">You don't have any vehicle yet</p>
+                                        @else
+                                            @foreach ($vehicle as $car)
+                                                <tr>
+                                                    <td>{{ $car->name }}</td>
+                                                    <td>{{ $car->user->fullname }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <a href="{{ route('vehicle.edit', ['vehicle' => $car->id]) }}"
+                                                                class="text-decoration-none me-2" data-bs-toggle="modal"
+                                                                data-bs-target="#modalEditVehicle" data-id="{{ $car->id }}"
+                                                                data-name="{{ $car->name }}" data-type="{{ $car->vehicle_type }}"
+                                                                data-transmission="{{ $car->transmission }}"
+                                                                data-license-plate="{{ $car->license_plate }}"><i class="fas fa-edit"></i></a>
+                                                            <form action="{{ route('vehicle.destroy', ['vehicle' => $car->id]) }}"
+                                                                method="post" class="d-inline">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <button type="submit" class="btn btn-link text-decoration-none"
+                                                                    style="color: black !important" onclick="return confirm('Are you sure?')"><i
+                                                                        class="fas fa-trash"></i></button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
             @else
             <div class="row mt-4">
@@ -155,6 +163,7 @@
                                     <th scope="col">Vehicle</th>
                                     <th scope="col">Service</th>
                                     <th scope="col">Date</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,6 +172,15 @@
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->service_type }}</td>
                                         <td>{{ \Carbon\Carbon::parse($data->date)->format('M d, Y') }}</td>
+                                        <td>
+                                            <form action="{{ route('home.deleteHistory', $data->id) }}" method="post" class="d-inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-link text-decoration-none" style="color: black !important" onclick="return confirm('Are you sure you want to delete this history record?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -369,32 +387,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-user"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">{{ $countCarRepair }}</span>
-                                    <span class="info-box-number">
-                                        Car Repair
-                                    </span>
-                                </div>
-                                <!-- /.info-box-content -->
-                            </div>
-                            <!-- /.info-box -->
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-user"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">{{ $countMotorcycleRepair }}</span>
-                                    <span class="info-box-number">
-                                        Motorcycle Repair
-                                    </span>
-                                </div>
-                                <!-- /.info-box-content -->
-                            </div>
-                            <!-- /.info-box -->
-                        </div>
                         <div class="col-12 col-sm-6 col-md-3">
                             <div class="info-box">
                                 <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-user"></i></span>

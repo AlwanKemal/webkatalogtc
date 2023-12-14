@@ -19,10 +19,10 @@ class HomeController extends Controller
         if (auth()->user()->role_id == 1) {
             $vehicle = Vehicle::all();
             $count = Vehicle::count();
-            $history = Booking::all();
+            $history = Booking::where('status', 'done')->get();
         }else if(auth()->user()->role_id == 2){
             $vehicle = Vehicle::where('id_user', auth()->user()->id)->get();
-            $history = Booking::where('id_user', auth()->user()->id)->get();
+            $history = Booking::where('id_user', auth()->user()->id)->where('status', 'done')->get();
             if ($vehicle->isEmpty() && $history->isEmpty()) {
                 $vehicle = "";
                 $count = 0;
@@ -30,7 +30,7 @@ class HomeController extends Controller
             }else if($vehicle->isEmpty() && !$history->isEmpty()){
                 $vehicle = "";
                 $count = 0;
-                $history = Booking::where('id_user', auth()->user()->id)->get();
+                $history = Booking::where('id_user', auth()->user()->id)->where('status', 'done')->get();
             }else if(!$vehicle->isEmpty() && $history->isEmpty()){
                 $vehicle = Vehicle::where('id_user', auth()->user()->id)->get();
                 $count = Vehicle::where('id_user', auth()->user()->id)->count();
@@ -39,7 +39,7 @@ class HomeController extends Controller
             else{
                 $vehicle = Vehicle::where('id_user', auth()->user()->id)->get();
                 $count = Vehicle::where('id_user', auth()->user()->id)->count();
-                $history = Booking::where('id_user', auth()->user()->id)->get();
+                $history = Booking::where('id_user', auth()->user()->id)->where('status', 'done')->get();
             }
         }
         $countCarRepair = Booking::where('service_type', 'repair')
@@ -97,7 +97,7 @@ class HomeController extends Controller
 
     public function invoice()
     {
-        $orderlist = Booking::with('user')->where('status', 'done')->get();
+        $orderlist = Booking::with('user')->get();
         return view('homepage_view.invoice', compact('orderlist'));
     }
 

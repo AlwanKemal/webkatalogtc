@@ -59,13 +59,15 @@
                                                 @endif
                                             </td>
                                             <td>                                         
-                                            <form action="{{ route('home.deleteBooking', $order->id) }}" method="post" class="d-inline">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-danger"
-                                                        onclick="return confirm('Are you sure?')"><i
-                                                            class="fas fa-trash"></i></button>
-                                            </form>
+                                            @if ($order->status != 'on_process')
+                                                <form action="{{ route('home.deleteBooking', $order->id) }}" method="post" class="d-inline">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                             </td>
                                         </tr>
                                     @endforeach

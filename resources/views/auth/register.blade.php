@@ -12,8 +12,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-10">
                 <div class="regis">
-                    <h1>Gear up for Repair</h1>
-                    <h4>Welcome to Ngebengkel! Please complete the form to register.</h4>
+                    <h1>Gear up for Wash your Vehicle</h1>
+                    <h4>Welcome to BOSA-WASH! Please complete the form to register.</h4>
                     <form action="" method="post">
                         @csrf
                         <div class="input-group mb-4">
@@ -53,8 +53,8 @@
                     </div>
                 </div>
             </div>
-            <div class="dua col-lg-6 col-md-8 col-sm-10 ">
-                <img src="{{ asset('images/illustration_login.png') }}" alt="login" class="img-fluid">
+            <div class="col-lg-6 col-md-4 col-sm-2">
+                <img src="{{ asset('images/illustration_login.png') }}" alt="Registration Image">
             </div>
         </div>
     </div>

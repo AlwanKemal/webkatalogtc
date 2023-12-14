@@ -53,11 +53,11 @@
                         <option value="1">Stand By</option>
                         <option value="2">On Process</option>
                         <option value="3">Done</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary mt-2">Edit</button>
+                    </select>                
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer">              
+                <button type="submit" form="editFormBooking" class="btn btn-primary">Save</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
