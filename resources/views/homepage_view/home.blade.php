@@ -33,44 +33,35 @@
                 </div>
             @endif
             @if (Auth::user()->role_id == 1)
-            <h5 class="mt-4">History</h5>
             <div class="row mt-4">
-                <div class="col-md-12">
-                    @if ($history != "")
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Vehicle</th>
-                                    <th scope="col">Owner</th>
-                                    <th scope="col">Service</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($history as $data)
-                                    <tr>
-                                        <td>{{ $data->name }}</td>
-                                        <td>{{ $data->user->fullname }}</td>
-                                        <td>{{ $data->service_type }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($data->date)->format('M d, Y') }}</td>
-                                        <td>
-                                            <form action="{{ route('home.deleteHistory', $data->id) }}" method="post" class="d-inline">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-link text-decoration-none" style="color: black !important" onclick="return confirm('Are you sure you want to delete this history record?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <p class="text-center col-md-12" style="color: gray">You don't have any history yet</p>
-                    @endif
+                <div class="col-md-6">
+                    <a href="{{ route('home.invoice') }}" class="btn">
+                        <div class="card">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 text-center">
+                                    <img src="{{ asset('images/invoice.png') }}" alt="Invoice" class="img-fluid" width="128px" height="60px">
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="text-center"><b style="color: #6D378F">Invoice</b></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{{ route('home.orderlist') }}" class="btn">
+                        <div class="card">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 text-center">
+                                    <img src="{{ asset('images/orderList.png') }}" alt="Order List" class="img-fluid" width="145px" height="100px">
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="text-center"><b style="color: #6D378F">Order</b></h5>
+                                    <h5 class="text-center"><b style="color: #6D378F">List</b></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

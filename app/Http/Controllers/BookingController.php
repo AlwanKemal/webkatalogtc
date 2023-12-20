@@ -157,7 +157,9 @@ class BookingController extends Controller
             $priceSparepart += $sparepart->price;
         }
         $total_price = $booking->ammount + $priceSparepart;
-        return view('homepage_view.detail_invoiceUser', compact('booking', 'total_price', 'priceSparepart'));
+        $pdf = PDF::loadView('homepage_view.detail_invoice', compact('booking', 'total_price', 'priceSparepart'));
+        $pdf->setPaper('a4', 'potrait');
+        return $pdf->stream('invoice.pdf');
     }
 
     /**
