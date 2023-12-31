@@ -154,7 +154,6 @@
                                     <th scope="col">Vehicle</th>
                                     <th scope="col">Service</th>
                                     <th scope="col">Date</th>
-                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,15 +162,6 @@
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->service_type }}</td>
                                         <td>{{ \Carbon\Carbon::parse($data->date)->format('M d, Y') }}</td>
-                                        <td>
-                                            <form action="{{ route('home.deleteHistory', $data->id) }}" method="post" class="d-inline">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-link text-decoration-none" style="color: black !important" onclick="return confirm('Are you sure you want to delete this history record?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

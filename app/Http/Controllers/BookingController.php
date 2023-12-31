@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Sparepart;
 use App\Models\Vehicle;
+use App\Models\DisabledDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDF;
@@ -41,8 +42,13 @@ class BookingController extends Controller
     {
         $credentials = $request->validate([
             'vehicle' => 'required',
+            'date' => 'required|date',
         ]);
         if ($credentials) {
+            $disabledDate = DisabledDate::where('disabled_date', $request->date)->first();   
+            if ($disabledDate) {
+                return redirect('/')->with('error', $disabledDate->description);
+            }
             $booking = new Booking([
                 'id_user' => Auth::user()->id,
                 'service_type' => $service_type,

@@ -33,6 +33,13 @@
                         <span class="ms-2">Order List</span>
                     </a>
                 </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link {{ request()->is('home/disableDateIndex') ? 'active' : '' }}"
+                        href="{{ route('home.disableDateIndex') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="ms-2">Disable Date</span>
+                    </a>
+                </li>
             @else
                 <li class="nav-item mb-2">
                     <a class="nav-link {{ request()->is('home/orderUser/' . Auth::user()->id) ? 'active' : '' }}"

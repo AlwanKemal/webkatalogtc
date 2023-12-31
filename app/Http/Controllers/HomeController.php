@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Sparepart;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Models\DisabledDate;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -112,4 +113,52 @@ class HomeController extends Controller
         $user = User::find($id);
         return view('homepage_view.profil', compact('user'));
     }
+
+    public function disableDateIndex()
+    {
+        $disabledDates = DisabledDate::all();
+        return view('homepage_view.disableDate', compact('disabledDates'));
+    }
+
+    public function disableDateStore(Request $request)
+    {
+        $request->validate([
+            'disabled_date' => 'required|date',
+        ]);
+
+        $disabledDate = DisabledDate::where('disabled_date', $request->disabled_date)->first();
+
+        if ($disabledDate) {
+            return redirect()->back()->with('warning', 'The selected date is already disabled due to: ' . $disabledDate->description);
+        }
+
+        DisabledDate::create([
+            'disabled_date' => $request->disabled_date,
+            'description' => $request->description
+        ]);
+
+        return redirect()->back()->with('success', 'Date Disabled!');
+    }
+
+    public function disableDateDestroy($id)
+    {
+        $disabledDate = DisabledDate::findOrFail($id);
+        $disabledDate->delete();
+
+        return redirect()->back()->with('success', 'Date Enabled!');
+    }
+
+    public function disableDateUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'edit_description' => 'required',
+        ]);
+
+        $disabledDate = DisabledDate::findOrFail($id);
+        $disabledDate->description = $request->edit_description;
+        $disabledDate->save();
+
+        return redirect()->back()->with('success', 'Description updated successfully!');
+    }
+
 }

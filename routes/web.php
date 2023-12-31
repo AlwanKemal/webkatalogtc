@@ -36,6 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/home/profile/{id}', [App\Http\Controllers\HomeController::class, 'profile'])->name('home.profile');
     Route::delete('/home/deleteHistory/{id}', [App\Http\Controllers\HomeController::class, 'deleteHistory'])->name('home.deleteHistory');
     Route::delete('/home/deleteBooking/{id}', [App\Http\Controllers\HomeController::class, 'deleteBooking'])->name('home.deleteBooking');
+    Route::get('home/disableDateIndex', [App\Http\Controllers\HomeController::class, 'disableDateIndex'])->name('home.disableDateIndex');
+    Route::post('home/disableDateStore', [App\Http\Controllers\HomeController::class, 'disableDateStore'])->name('home.disableDateStore');
+    Route::delete('home/disableDateDestroy/{id}', [App\Http\Controllers\HomeController::class, 'disableDateDestroy'])->name('home.disableDateDestroy');
+    Route::put('home/disableDateUpdate/{id}', [App\Http\Controllers\HomeController::class, 'disableDateUpdate'])->name('home.disableDateUpdate');
+
 
     // Sparepart Routes
     Route::resource('sparepart', App\Http\Controllers\SparepartController::class);
