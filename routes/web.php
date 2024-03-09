@@ -28,33 +28,16 @@ Route::middleware('auth')->group(function () {
     // Home and Resource Routes
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     // Home Routes
-    Route::get('/home/orderlist', [App\Http\Controllers\HomeController::class, 'orderlist'])->name('home.orderlist');
-    Route::get('/home/orderUser/{id}', [App\Http\Controllers\HomeController::class, 'orderUser'])->name('home.orderUser');
-    Route::get('/home/sparepart', [App\Http\Controllers\HomeController::class, 'sparepart'])->name('home.sparepart');
-    Route::get('/home/invoice', [App\Http\Controllers\HomeController::class, 'invoice'])->name('home.invoice');
-    Route::get('/home/invoiceUser/{id}', [App\Http\Controllers\HomeController::class, 'invoiceUser'])->name('home.invoiceUser');
     Route::get('/home/profile/{id}', [App\Http\Controllers\HomeController::class, 'profile'])->name('home.profile');
-    Route::delete('/home/deleteHistory/{id}', [App\Http\Controllers\HomeController::class, 'deleteHistory'])->name('home.deleteHistory');
-    Route::delete('/home/deleteBooking/{id}', [App\Http\Controllers\HomeController::class, 'deleteBooking'])->name('home.deleteBooking');
-    Route::get('home/disableDateIndex', [App\Http\Controllers\HomeController::class, 'disableDateIndex'])->name('home.disableDateIndex');
-    Route::post('home/disableDateStore', [App\Http\Controllers\HomeController::class, 'disableDateStore'])->name('home.disableDateStore');
-    Route::delete('home/disableDateDestroy/{id}', [App\Http\Controllers\HomeController::class, 'disableDateDestroy'])->name('home.disableDateDestroy');
-    Route::put('home/disableDateUpdate/{id}', [App\Http\Controllers\HomeController::class, 'disableDateUpdate'])->name('home.disableDateUpdate');
+    Route::post('home/addTestCase', [App\Http\Controllers\HomeController::class, 'addTestCase'])->name('home.addTestCase');
+    Route::put('home/editTestCase/{id}', [App\Http\Controllers\HomeController::class, 'editTestCase'])->name('home.editTestCase');
+    Route::delete('home/deleteTestCase/{id}', [App\Http\Controllers\HomeController::class, 'deleteTestCase'])->name('home.deleteTestCase');
+    Route::post('home/saveSelectedTestCases', [App\Http\Controllers\HomeController::class, 'saveSelectedTestCases'])->name('home.saveSelectedTestCases');
+    Route::get('home/showSelectedTestCases', [App\Http\Controllers\HomeController::class, 'showSelectedTestCases'])->name('home.showSelectedTestCases');
+    Route::delete('home/deleteAllSelectedTestCases', [App\Http\Controllers\HomeController::class, 'deleteAllSelectedTestCases'])->name('home.deleteAllSelectedTestCases');
+    Route::delete('home/deleteSelectedTestCase/{id}', [App\Http\Controllers\HomeController::class, 'deleteSelectedTestCase'])->name('home.deleteSelectedTestCase');
+    Route::get('home/showUser', [App\Http\Controllers\HomeController::class, 'showUser'])->name('home.showUser');
+    Route::delete('home/deleteUser/{id}', [App\Http\Controllers\HomeController::class, 'deleteUser'])->name('home.deleteUser');
+    Route::post('home/export', [App\Http\Controllers\HomeController::class, 'export'])->name('home.export');
 
-
-    // Sparepart Routes
-    Route::resource('sparepart', App\Http\Controllers\SparepartController::class);
-
-    // Vehicle Routes
-    Route::resource('vehicle', App\Http\Controllers\VehicleController::class);
-
-    // Booking Routes
-    Route::post('/booking/{service_type}', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
-    Route::put('/booking/{id}', [App\Http\Controllers\BookingController::class, 'update'])->name('booking.update');
-    Route::put('/booking/updateSparepart/{sparepart}', [App\Http\Controllers\BookingController::class, 'updateSparepart'])->name('booking.updateSparepart');
-    Route::delete('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'destroy'])->name('booking.destroy');
-
-    // Invoice 
-    Route::get('/booking/invoice/{booking}', [App\Http\Controllers\BookingController::class, 'invoice'])->name('booking.invoice');
-    Route::get('/booking/invoiceUser/{id}', [App\Http\Controllers\BookingController::class, 'invoiceUser'])->name('booking.invoiceUser');
 });

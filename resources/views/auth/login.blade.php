@@ -39,7 +39,7 @@
                             now</a></p>
                 </div>
             </div>
-            <div class="col-md-4 d-flex">
+            <div class="col-md-4 d-flex justify-content-center align-items-center"> {{-- Modified class --}}
                 <img src="{{ asset('images/illustration_login.png') }}" alt="login" class="img-fluid"
                     width="360px" height="240px">
             </div>

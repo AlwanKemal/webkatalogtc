@@ -12,8 +12,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-10">
                 <div class="regis">
-                    <h1>Gear up for Wash your Vehicle</h1>
-                    <h4>Welcome to BOSA-WASH! Please complete the form to register.</h4>
+                    <h1>Unlock Quality, Test with Precision</h1>
+                    <h4>Welcome to Web Catalog Test Case! Please complete the form to register.</h4>
                     <form action="" method="post">
                         @csrf
                         <div class="input-group mb-4">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="input-group mb-4">
                             <input type="text" class="form-control" id="no_telepon" name="no_hp"
-                                placeholder="Enter your number telephone">
+                                placeholder="Enter your number telephone/WA">
                         </div>
                         <div class="input-group mb-3">
                             <input name="password" type="password" value="" class="form-control" id="password"
@@ -53,8 +53,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-4 col-sm-2">
-                <img src="{{ asset('images/illustration_login.png') }}" alt="Registration Image">
+            <div class="col-md-4 d-flex justify-content-center align-items-center"> {{-- Modified class --}}
+                <img src="{{ asset('images/illustration_login.png') }}" alt="Registration Image" class="img-fluid"
+                    width="360px" height="240px">
             </div>
         </div>
     </div>

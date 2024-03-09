@@ -5,261 +5,278 @@
 @endsection
 
 @section('content')
-    <div class="row mt-3">
-        <div class="col-md-8">
-            <div class="container blok">
-                <div class="row">
-                    <div class="col-md-8 mt-3 mb-2">
-                        <h3>Hi, {{ Auth::user()->fullname }}</h3>
-                        <p>Atur waktu pencucian kendaraan Anda dengan mudah melalui platform kami. Kami menghadirkan kemudahan reservasi online untuk memastikan kendaraan Anda bersinar dalam sekejap.</p>
-                        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalQueue">See
-                            Queue</a>
+    <div class="container">
+        <div class="row">   
+            @if (Auth::user()->role_id == 1)       
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-5">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show mt-3 mb-3" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @elseif(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show mt-3 mb-3" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    <div class="d-flex justify-content-end px-3 pb-3">
+                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTestCaseModal">
+                            Add Test Case
+                        </button>
                     </div>
-                    <div class="col-md-4 d-flex">
-                        <img src="{{ asset('images/illustration_hero.png') }}" alt="home" class="img-fluid"
-                            width="251px" height="142px">
-                    </div>
-                </div>
-            </div>
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show mt-3 mb-3" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @elseif(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show mt-3 mb-3" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            @if (Auth::user()->role_id == 1)
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <a href="{{ route('home.invoice') }}" class="btn">
-                        <div class="card">
-                            <div class="row align-items-center">
-                                <div class="col-md-6 text-center">
-                                    <img src="{{ asset('images/invoice.png') }}" alt="Invoice" class="img-fluid" width="128px" height="60px">
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 class="text-center"><b style="color: #6D378F">Invoice</b></h5>
-                                </div>
+                    <div class="card">                   
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">List Test Case</h3>
+                            <div class="input-group" style="width: 200px;">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search...">
                             </div>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="{{ route('home.orderlist') }}" class="btn">
-                        <div class="card">
-                            <div class="row align-items-center">
-                                <div class="col-md-6 text-center">
-                                    <img src="{{ asset('images/orderList.png') }}" alt="Order List" class="img-fluid" width="145px" height="100px">
+                        <div class="card-body" style="overflow-x: auto;">                           
+                            @if ($data_testcase->isEmpty())
+                                <div class="alert alert-danger" role="alert">
+                                    <h4 class="alert-heading text-center">No Data</h4>
+                                    <p class="text-center">There is no data</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <h5 class="text-center"><b style="color: #6D378F">Order</b></h5>
-                                    <h5 class="text-center"><b style="color: #6D378F">List</b></h5>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="container">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-sm-7">
-                                <h5 class="mb-1">
-                                    List user Vehicles
-                                </h5>
-                                <p>{{ $count }} Vehicles</p>
-                            </div>
-                            <div class="col-sm-5 mt-3">
-                                <a href="#" class="text-decoration-none" data-bs-toggle="modal"
-                                    data-bs-target="#modalVehicle">
-                                    <i class="fas fa-plus"></i>
-                                    <span class="ms-2">Add Vehicle</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        @if ($vehicle == "")
-                                            <p class="text-center" style="color: gray">You don't have any vehicle yet</p>
-                                        @else
-                                            @foreach ($vehicle as $car)
-                                                <tr>
-                                                    <td>{{ $car->name }}</td>
-                                                    <td>{{ $car->user->fullname }}</td>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="{{ route('vehicle.edit', ['vehicle' => $car->id]) }}"
-                                                                class="text-decoration-none me-2" data-bs-toggle="modal"
-                                                                data-bs-target="#modalEditVehicle" data-id="{{ $car->id }}"
-                                                                data-name="{{ $car->name }}" data-type="{{ $car->vehicle_type }}"
-                                                                data-transmission="{{ $car->transmission }}"
-                                                                data-license-plate="{{ $car->license_plate }}"><i class="fas fa-edit"></i></a>
-                                                            <form action="{{ route('vehicle.destroy', ['vehicle' => $car->id]) }}"
-                                                                method="post" class="d-inline">
-                                                                @csrf
-                                                                @method('delete')
-                                                                <button type="submit" class="btn btn-link text-decoration-none"
-                                                                    style="color: black !important" onclick="return confirm('Are you sure?')"><i
-                                                                        class="fas fa-trash"></i></button>
-                                                            </form>
+                            @else
+                                <table class="table table-striped" id="tableTestCase">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Test Case Domain</th>
+                                            <th scope="col">Module Name</th>
+                                            <th scope="col">Test Description</th>
+                                            <th scope="col">Test Case Type</th>
+                                            <th scope="col">Test Case Step</th>
+                                            <th scope="col">Test Data</th>
+                                            <th scope="col">Expected Result</th>
+                                            <th scope="col">Actual Result</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($data_testcase as $testcase)
+                                        <tr>
+                                            <td>{{$testcase->test_domain}}</td>
+                                            <td>{{$testcase->module_name}}</td>
+                                            <td>{{$testcase->test_description}}</td>
+                                            <td>
+                                                @if($testcase->test_case_type)
+                                                    <span class="badge bg-success">Positive</span>
+                                                @else
+                                                    <span class="badge bg-danger">Negative</span>
+                                                @endif
+                                            </td>
+                                            <td>{{$testcase->test_step}}</td>
+                                            <td><pre>{{$testcase->test_data}}</pre></td>
+                                            <td>{{$testcase->expected_result}}</td>
+                                            <td>{{$testcase->actual_result}}</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <form method="POST" action="{{ route('home.deleteTestCase', $testcase->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm me-2" onclick="return confirm('Are you sure you want to delete this?')"><i
+                                                            class="fas fa-trash"></i></button>
+                                                    </form>
+                                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editTestCaseModal{{$testcase->id}}"><i 
+                                                            class="fas fa-edit"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="editTestCaseModal{{$testcase->id}}" tabindex="-1" aria-labelledby="editTestCaseModal{{$testcase->id}}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editTestCaseModal{{$testcase->id}}">Edit Test Case</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form method="POST" action="{{ route('home.editTestCase', $testcase->id) }}">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="test_domain{{$testcase->id}}">Edit Test Domain</label>
+                                                                <textarea id="test_domain{{$testcase->id}}" name="test_domain" class="form-control" required>{{ $testcase->test_domain }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="module_name{{$testcase->id}}">Edit Module Name</label>
+                                                                <textarea id="module_name{{$testcase->id}}" name="module_name" class="form-control" required>{{ $testcase->module_name }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="test_description{{$testcase->id}}">Edit Description</label>
+                                                                <textarea id="test_description{{$testcase->id}}" name="test_description" class="form-control" required>{{ $testcase->test_description }}</textarea>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3">
+                                                                <label for="test_case_type{{$testcase->id}}">Edit Test Case Type</label>
+                                                                <select class="form-select" id="test_case_type{{$testcase->id}}" name="test_case_type" required>
+                                                                    <option value="1" {{ $testcase->test_case_type ? 'selected' : '' }}>Positive</option>
+                                                                    <option value="0" {{ !$testcase->test_case_type ? 'selected' : '' }}>Negative</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label for="test_step{{$testcase->id}}">Edit Test Step</label>
+                                                                <textarea id="test_step{{$testcase->id}}" name="test_step" class="form-control" required>{{ $testcase->test_step }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="test_data{{$testcase->id}}">Edit Test Data</label>
+                                                                <textarea id="test_data{{$testcase->id}}" name="test_data" class="form-control" required>{{ $testcase->test_data }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="expected_result{{$testcase->id}}">Edit Expected Result</label>
+                                                                <textarea id="expected_result{{$testcase->id}}" name="expected_result" class="form-control" required>{{ $testcase->expected_result }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="actual_result{{$testcase->id}}">Edit Actual Result</label>
+                                                                <textarea id="actual_result{{$testcase->id}}" name="actual_result" class="form-control" required>{{ $testcase->actual_result }}</textarea>
+                                                            </div>
                                                         </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-5">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show mt-3 mb-3" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @elseif(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show mt-3 mb-3" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    <div class="card">  
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">List Test Case</h3>
+                            <div class="input-group" style="width: 200px;">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-x: auto;">
+                            @if ($data_testcase->isEmpty())
+                                <div class="alert alert-danger" role="alert">
+                                    <h4 class="alert-heading text-center">No Data</h4>
+                                    <p class="text-center">There is no data</p>
+                                </div>
+                            @else
+                                <form method="post" action="{{ route('home.saveSelectedTestCases') }}">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                    <table class="table table-striped" id="tableTestCase">
+                                        <thead>
+                                            <tr> 
+                                                <th scope="col">Select</th>                
+                                                <th scope="col">Test Case Domain</th>
+                                                <th scope="col">Module Name</th>
+                                                <th scope="col">Test Description</th>
+                                                <th scope="col">Test Case Type</th>
+                                                <th scope="col">Test Case Step</th>
+                                                <th scope="col">Test Data</th>
+                                                <th scope="col">Expected Result</th>
+                                                <th scope="col">Actual Result</th>                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($data_testcase as $testcase)
+                                                <tr>    
+                                                    <td>
+                                                        <input type="checkbox" name="selected_test_cases[]" value="{{ $testcase->id }}">
+                                                    </td>                                       
+                                                    <td>{{$testcase->test_domain}}</td>
+                                                    <td>{{$testcase->module_name}}</td>
+                                                    <td>{{$testcase->test_description}}</td>
+                                                    <td>
+                                                        @if($testcase->test_case_type)
+                                                            <span class="badge bg-success">Positive</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Negative</span>
+                                                        @endif
                                                     </td>
+                                                    <td>{{$testcase->test_step}}</td>
+                                                    <td><pre>{{$testcase->test_data}}</pre></td>
+                                                    <td>{{$testcase->expected_result}}</td>
+                                                    <td>{{$testcase->actual_result}}</td>                          
                                                 </tr>
                                             @endforeach
-                                        @endif
+                                        </tbody>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            @else
-            <div class="row mt-4">
-                <div class="col-md-6 col-sm-12">
-                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalWash">
-                        <div class="card">
-                            <div class="row">
-                                <div class="col-6">
-                                    <img src="{{ asset('images/illustration_wash.png') }}" alt="home" class="img-fluid"
-                                        width="100%" height="auto">
-                                </div>
-                                <div class="col-6">
-                                    <h5 class="mt-4">
-                                        Booking
-                                    </h5>
-                                    <h5>for <b style="color: #6D378F">Wash</b></h5>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <h5 class="mt-4">History</h5>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    @if ($history != "")
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Vehicle</th>
-                                    <th scope="col">Service</th>
-                                    <th scope="col">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($history as $data)
-                                    <tr>
-                                        <td>{{ $data->name }}</td>
-                                        <td>{{ $data->service_type }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($data->date)->format('M d, Y') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <p class="text-center col-md-12" style="color: gray">You don't have any history yet</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="container">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-sm-7">
-                                <h5 class="mb-1">
-                                    My Vehicles
-                                </h5>
-                                <p>{{ $count }} Vehicles</p>
-                            </div>
-                            <div class="col-sm-5 mt-3">
-                                <a href="#" class="text-decoration-none" data-bs-toggle="modal"
-                                    data-bs-target="#modalVehicle">
-                                    <i class="fas fa-plus"></i>
-                                    <span class="ms-2">Add Vehicle</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table>
-                            @if ($vehicle == "")
-                                <p class="text-center" style="color: gray">You don't have any vehicle yet</p>
-                            @else
-                            @foreach ($vehicle as $car)
-                            <tr>
-                                <td class="pe-lg-5">{{ $car->name }}</td>
-                                <td class="ps-lg-5 pe-2">
-                                    <a href="{{ route('vehicle.edit', ['vehicle' => $car->id]) }}"
-                                        class="text-decoration-none" data-bs-toggle="modal"
-                                        data-bs-target="#modalEditVehicle" data-id="{{ $car->id }}"
-                                        data-name="{{ $car->name }}" data-type="{{ $car->vehicle_type }}"
-                                        data-transmission="{{ $car->transmission }}"
-                                        data-license-plate="{{ $car->license_plate }}"><i class="fas fa-edit"></i></a>
-                                </td>
-                                <td>
-                                    <form action="{{ route('vehicle.destroy', ['vehicle' => $car->id]) }}"
-                                        method="post" class="d-inline">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-link text-decoration-none"
-                                            style="color: black !important" onclick="return confirm('Are you sure?')"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn btn-primary">Save Selected</button>
+                                    </div>  
+                                </form>
                             @endif
-                        </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            @endif          
+            @endif
         </div>
     </div>
-    {{-- Modal Add Vehicle --}}
-    <div class="modal fade" id="modalVehicle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+
+    {{-- Modal Add Test Case --}}
+    <div class="modal fade" id="addTestCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Vehicle</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Test Case</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('vehicle.store') }}" method="POST">
+                    <form action="{{ route('home.addTestCase') }}" method="post" >
                         @csrf
-                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                        <label for="name"><b>Name</b></label>
-                        <input type="text" name="name" id="name" class="form-control mt-2" required>
-                        <label for="name" class="mt-2"><b>Vehicle Type</b></label>
-                        <select name="vehicle_type" id="vehicle_type" class="form-select mt-2" required>
-                            <option value="1">Car</option>
-                            <option value="2">Motorcycle</option>
-                        </select>
-                        <label for="name" class="mt-2"><b>Transmission</b></label>
-                        <select name="transmission" id="transmission" class="form-select mt-2" required>
-                            <option value="1">Manual</option>
-                            <option value="2">Automatic</option>
-                        </select>
-                        <label for="name" class="mt-2"><b>License Number Plate</b></label>
-                        <input type="text" name="license_number_plate" id="license_number_plate"
-                            class="form-control mt-2" required>
-
-                </div>
-                <div class="modal-footer">
-
-                    <button type="submit" class="btn btn-primary">Add</button>
+                        <div class="mb-3">
+                            <label for="test_domain" class="form-label">Test Case Domain</label>
+                            <input type="text" class="form-control" id="test_domain" name="test_domain" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="module_name" class="form-label">Module Name</label>
+                            <input type="text" class="form-control" id="module_name" name="module_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test_description" class="form-label">Test Description</label>
+                            <textarea class="form-control" id="test_description" name="test_description" required> </textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test_case_type" class="form-label">Test Case Type</label>
+                            <select class="form-select" id="test_case_type" name="test_case_type" required>
+                                <option value="1">Positive</option>
+                                <option value="0">Negative</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test_step" class="form-label">Test Case Step</label>
+                            <textarea class="form-control" id="test_step" name="test_step" required> </textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test_data" class="form-label">Test Data</label>
+                            <textarea class="form-control" id="test_data" name="test_data" required> </textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expected_result" class="form-label">Expected Result</label>
+                            <input type="text" class="form-control" id="expected_result" name="expected_result" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="actual_result" class="form-label">Actual Result</label>
+                            <input type="text" class="form-control" id="actual_result" name="actual_result" required>
+                        </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
@@ -267,140 +284,24 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').on('keyup', function () {
+                var searchText = $(this).val().toLowerCase();
+                filterData(searchText);
+            });
 
-
-    {{-- Modal Booking for Repair --}}
-    <div class="modal fade" id="modalRepair" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Booking for Repair</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('booking.store', ['service_type' => 'repair']) }}" method="POST">
-                        @csrf
-                        <label for="name"><b>Select Your Vehicle</b></label>
-                        <select name="vehicle" id="selectVehicle" class="form-select mt-2"
-                            onchange="changeElement(this)" required>
-                            <option value="" selected disabled>Select Vehicle</option>
-                            @if ($vehicle != "")
-                            @foreach ($vehicle as $data)
-                                <option value="{{ $data->name }}" data-vehicle="{{ $data->vehicle_type }}"
-                                    data-transmission="{{ $data->transmission }}" data-license-plate="{{ $data->license_plate }}">{{ $data->name }}</option>
-                            @endforeach
-                                
-                            @endif
-                        </select>
-                        <input type="hidden" name="vehicle_type" id="vehicle_type" value="">
-                        <input type="hidden" name="transmission" id="transmission" value="">
-                        <input type="hidden" name="license_plate" id="license_plate" value="">
-                        <label for="name" class="mt-2"><b>Date</b></label>
-                        <input type="date" name="date" id="date" class="form-control mt-2" required>
-                        <label for="name" class="mt-2"><b>Notes</b></label>
-                        <input type="text" name="notes" id="notes" class="form-control mt-2"
-                            placeholder="Notes">
-                        <label for="name" class="mt-2"><b>Select Package</b></label>
-                        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center mt-3" id="pricingTable" >
-                            <p class="text-center col-md-12" style="color: gray">Please Select Vehicle First</p>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Book</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Modal Booking for Wash --}}
-    <div class="modal fade" id="modalWash" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Booking for Wash</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('booking.store', ['service_type' => 'wash']) }}" method="POST">
-                        @csrf
-                        <label for="name"><b>Select Your Vehicle</b></label>
-                        <select name="vehicle" id="selectVehicleWash" class="form-select mt-2"
-                            onchange="changeElementWash(this)" required>
-                            <option value="" selected disabled>Select Vehicle</option>
-                            @if ($vehicle != "")
-                            @foreach ($vehicle as $data)
-                            <option value="{{ $data->name }}" data-vehicle="{{ $data->vehicle_type }}"
-                                data-transmission="{{ $data->transmission }}" data-license-plate="{{ $data->license_plate }}">{{ $data->name }}</option>
-                            @endforeach
-                            @endif
-                        </select>
-                        <input type="hidden" name="vehicle_type" id="vehicle_type" value="">
-                        <input type="hidden" name="transmission" id="transmission" value="">
-                        <input type="hidden" name="license_plate" id="license_plate" value="">
-                        <label for="name" class="mt-2"><b>Date</b></label>
-                        <input type="date" name="date" id="date" class="form-control mt-2" required>
-                        <label for="name" class="mt-2"><b>Notes</b></label>
-                        <input type="text" name="notes" id="notes" class="form-control mt-2"
-                            placeholder="Notes" >
-                        <label for="name" class="mt-2"><b>Select Package</b></label>
-                        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center mt-3" id="pricingTableWash">
-                            <p class="text-center col-md-12" style="color: gray">Please Select Vehicle First</p>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Book</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Modal For Queue --}}
-    <div class="modal fade" id="modalQueue" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Queue For Book</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-user"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">{{ $countCarWash }}</span>
-                                    <span class="info-box-number">
-                                        Car Wash
-                                    </span>
-                                </div>
-                                <!-- /.info-box-content -->
-                            </div>
-                            <!-- /.info-box -->
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-user"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">{{ $countMotorcycleWash }}</span>
-                                    <span class="info-box-number">
-                                        Motorcycle Wash
-                                    </span>
-                                </div>
-                                <!-- /.info-box-content -->
-                            </div>
-                            <!-- /.info-box -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+            function filterData(searchText) {
+                $('tbody tr').filter(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    var showRow = true;
+                    if (searchText !== '') {
+                        showRow = rowText.indexOf(searchText) > -1;
+                    }
+                    $(this).toggle(showRow);
+                });
+            }
+        });
+    </script>
 
 @endsection

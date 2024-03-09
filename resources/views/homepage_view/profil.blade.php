@@ -18,15 +18,15 @@
                     <div class="col-lg-12">
                         <table class="table table-striped">
                             <tr>
-                                <th scope="col">Nama</th>
+                                <th scope="col">Name :</th>
                                 <td>{{ $user->fullname }}</td>
                             </tr>
                             <tr>
-                                <th scope="col">Username</th>
+                                <th scope="col">Username :</th>
                                 <td>{{ $user->username }}</td>
                             </tr>
                             <tr>
-                                <th scope="col">Phone</th>
+                                <th scope="col">Phone :</th>
                                 <td>{{ $user->no_hp }}</td>
                             </tr>
                         </table>
