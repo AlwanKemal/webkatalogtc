@@ -9,9 +9,6 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3>Profil</h3>
-                <div class="text-end">
-                    <a href="{{ url()->previous() }}" class="btn btn-primary text-white"><i class="fas fa-arrow-left"></i> Back</a>
-                </div>
             </div>
             <div class="card-body">
                 <div class="row">

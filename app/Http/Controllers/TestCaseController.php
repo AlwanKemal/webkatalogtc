@@ -18,6 +18,7 @@ class TestCaseController extends Controller
     {
         $data_testcase = new TestCase([
             'test_domain' => $request->get('test_domain'),
+            'test_case_pattern' => $request->get('test_case_pattern'),
             'module_name' => $request->get('module_name'),
             'test_description' => $request->get('test_description'),
             'test_case_type' => $request->get('test_case_type'),
@@ -34,6 +35,7 @@ class TestCaseController extends Controller
     {
         $request->validate([
             'test_domain' => 'required',
+            'test_case_pattern' => 'required',
             'module_name' => 'required',
             'test_description' => 'required',
             'test_case_type' => 'required',

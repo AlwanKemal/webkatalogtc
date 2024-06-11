@@ -24,14 +24,15 @@
                         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTestCaseModal">
                             Add Test Case
                         </button>
+                        <form action="{{ route('home.deleteAllTestCase') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete all test cases?')">Delete All</button>
+                        </form>
                     </div>
                     <div class="card">                   
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="mb-0">List Test Case</h3>
-                            <div class="input-group" style="width: 200px;">
-                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search...">
-                            </div>
                         </div>
                         <div class="card-body" style="overflow-x: auto;">                           
                             @if ($data_testcase->isEmpty())
@@ -40,17 +41,17 @@
                                     <p class="text-center">There is no data</p>
                                 </div>
                             @else
-                                <table class="table table-striped" id="tableTestCase">
+                                <table class="table table-striped" id="tableTestCaseA">
                                     <thead>
                                         <tr>
                                             <th scope="col">Test Case Domain</th>
+                                            <th scope="col">Pattern</th>
+                                            <th scope="col">Category</th>
                                             <th scope="col">Module Name</th>
                                             <th scope="col">Test Description</th>
                                             <th scope="col">Test Case Type</th>
-                                            <th scope="col">Test Case Step</th>
-                                            <th scope="col">Test Data</th>
+                                            <th scope="col">Test Case Step</th>                                
                                             <th scope="col">Expected Result</th>
-                                            <th scope="col">Actual Result</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -58,6 +59,14 @@
                                         @foreach($data_testcase as $testcase)
                                         <tr>
                                             <td>{{$testcase->test_domain}}</td>
+                                            <td>
+                                                @if($testcase->test_case_pattern)
+                                                    <span class="badge bg-info">Independent</span>
+                                                @else
+                                                    <span class="badge bg-warning">Dependent</span>
+                                                @endif
+                                            </td>
+                                            <td>{{$testcase->test_data}}</td>
                                             <td>{{$testcase->module_name}}</td>
                                             <td>{{$testcase->test_description}}</td>
                                             <td>
@@ -67,10 +76,8 @@
                                                     <span class="badge bg-danger">Negative</span>
                                                 @endif
                                             </td>
-                                            <td>{{$testcase->test_step}}</td>
-                                            <td><pre>{{$testcase->test_data}}</pre></td>
+                                            <td><pre>{{$testcase->test_step}}<pre></td>                                            
                                             <td>{{$testcase->expected_result}}</td>
-                                            <td>{{$testcase->actual_result}}</td>
                                             <td>
                                                 <div class="d-flex">
                                                     <form method="POST" action="{{ route('home.deleteTestCase', $testcase->id) }}">
@@ -100,6 +107,17 @@
                                                                 <textarea id="test_domain{{$testcase->id}}" name="test_domain" class="form-control" required>{{ $testcase->test_domain }}</textarea>
                                                             </div>
                                                             <div class="mb-3">
+                                                                <label for="test_case_pattern{{$testcase->id}}">Edit Pattern</label>
+                                                                <select class="form-select" id="test_case_pattern{{$testcase->id}}" name="test_case_pattern" required>
+                                                                    <option value="1" {{ $testcase->test_case_pattern ? 'selected' : '' }}>Independent</option>
+                                                                    <option value="0" {{ !$testcase->test_case_pattern ? 'selected' : '' }}>Dependent</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="test_data{{$testcase->id}}">Edit Category</label>
+                                                                <textarea id="test_data{{$testcase->id}}" name="test_data" class="form-control" required>{{ $testcase->test_data }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
                                                                 <label for="module_name{{$testcase->id}}">Edit Module Name</label>
                                                                 <textarea id="module_name{{$testcase->id}}" name="module_name" class="form-control" required>{{ $testcase->module_name }}</textarea>
                                                             </div>
@@ -119,18 +137,10 @@
                                                             <div class="mb-3">
                                                                 <label for="test_step{{$testcase->id}}">Edit Test Step</label>
                                                                 <textarea id="test_step{{$testcase->id}}" name="test_step" class="form-control" required>{{ $testcase->test_step }}</textarea>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="test_data{{$testcase->id}}">Edit Test Data</label>
-                                                                <textarea id="test_data{{$testcase->id}}" name="test_data" class="form-control" required>{{ $testcase->test_data }}</textarea>
-                                                            </div>
+                                                            </div>                            
                                                             <div class="mb-3">
                                                                 <label for="expected_result{{$testcase->id}}">Edit Expected Result</label>
                                                                 <textarea id="expected_result{{$testcase->id}}" name="expected_result" class="form-control" required>{{ $testcase->expected_result }}</textarea>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="actual_result{{$testcase->id}}">Edit Actual Result</label>
-                                                                <textarea id="actual_result{{$testcase->id}}" name="actual_result" class="form-control" required>{{ $testcase->actual_result }}</textarea>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -161,14 +171,29 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-                    <div class="card">  
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h3 class="mb-0">List Test Case</h3>
-                            <div class="input-group" style="width: 200px;">
-                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                    <div class="d-flex justify-content-end px-3 pb-3">
+                        <form method="GET" action="{{ route('home.filterByModule') }}" class="d-flex">
+                            <div class="input-group" style="width: 170px; margin-right: 10px;">
+                            <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                                <select class="form-select" id="filterValue" name="filterValue">
+                                    <option value=""></option>
+                                    @foreach($distinctModules as $module)
+                                        <option value="{{ $module }}">{{ $module }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="{{ route('home') }}" class="btn btn-secondary ms-2">default</a>
+                        </form>
+                    </div>
+                    <div class="card">  
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">List Test Case</h3>                     
+                        <div class="input-group" style="width: 200px;">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
                         </div>
+                    </div>
                         <div class="card-body" style="overflow-x: auto;">
                             @if ($data_testcase->isEmpty())
                                 <div class="alert alert-danger" role="alert">
@@ -184,13 +209,13 @@
                                             <tr> 
                                                 <th scope="col">Select</th>                
                                                 <th scope="col">Test Case Domain</th>
+                                                <th scope="col">Pattern</th>
+                                                <th scope="col">Category</th>
                                                 <th scope="col">Module Name</th>
                                                 <th scope="col">Test Description</th>
                                                 <th scope="col">Test Case Type</th>
-                                                <th scope="col">Test Case Step</th>
-                                                <th scope="col">Test Data</th>
-                                                <th scope="col">Expected Result</th>
-                                                <th scope="col">Actual Result</th>                                               
+                                                <th scope="col">Test Case Step</th>                                               
+                                                <th scope="col">Expected Result</th>                                            
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -200,6 +225,14 @@
                                                         <input type="checkbox" name="selected_test_cases[]" value="{{ $testcase->id }}">
                                                     </td>                                       
                                                     <td>{{$testcase->test_domain}}</td>
+                                                    <td>
+                                                        @if($testcase->test_case_pattern)
+                                                            <span class="badge bg-info">Independent</span>
+                                                        @else
+                                                            <span class="badge bg-warning">Dependent</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{$testcase->test_data}}</td>
                                                     <td>{{$testcase->module_name}}</td>
                                                     <td>{{$testcase->test_description}}</td>
                                                     <td>
@@ -209,10 +242,8 @@
                                                             <span class="badge bg-danger">Negative</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{$testcase->test_step}}</td>
-                                                    <td><pre>{{$testcase->test_data}}</pre></td>
-                                                    <td>{{$testcase->expected_result}}</td>
-                                                    <td>{{$testcase->actual_result}}</td>                          
+                                                    <td><pre>{{$testcase->test_step}}<pre></td>                                   
+                                                    <td>{{$testcase->expected_result}}</td>                      
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -229,6 +260,12 @@
         </div>
     </div>
 
+    @if (Auth::user()->role_id != 1)
+        <button id="scrollToBottomBtn" class="btn btn-primary btn-sm" style="position: fixed; bottom: 20px; right: 20px; display: none;">
+            <i class="fas fa-chevron-down"></i> Scroll to Bottom
+        </button>
+    @endif
+
     {{-- Modal Add Test Case --}}
     <div class="modal fade" id="addTestCaseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -243,6 +280,17 @@
                         <div class="mb-3">
                             <label for="test_domain" class="form-label">Test Case Domain</label>
                             <input type="text" class="form-control" id="test_domain" name="test_domain" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test_case_pattern" class="form-label">Pattern</label>
+                            <select class="form-select" id="test_case_pattern" name="test_case_pattern" required>
+                                <option value="1">Independent</option>
+                                <option value="0">Dependent</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test_data" class="form-label">Category</label>
+                            <textarea class="form-control" id="test_data" name="test_data" required> </textarea>
                         </div>
                         <div class="mb-3">
                             <label for="module_name" class="form-label">Module Name</label>
@@ -262,18 +310,10 @@
                         <div class="mb-3">
                             <label for="test_step" class="form-label">Test Case Step</label>
                             <textarea class="form-control" id="test_step" name="test_step" required> </textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="test_data" class="form-label">Test Data</label>
-                            <textarea class="form-control" id="test_data" name="test_data" required> </textarea>
-                        </div>
+                        </div>                       
                         <div class="mb-3">
                             <label for="expected_result" class="form-label">Expected Result</label>
                             <input type="text" class="form-control" id="expected_result" name="expected_result" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="actual_result" class="form-label">Actual Result</label>
-                            <input type="text" class="form-control" id="actual_result" name="actual_result" required>
                         </div>
                     <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -286,6 +326,7 @@
 
     <script>
         $(document).ready(function () {
+            $('#tableTestCaseA').DataTable();
             $('#searchInput').on('keyup', function () {
                 var searchText = $(this).val().toLowerCase();
                 filterData(searchText);
@@ -301,6 +342,28 @@
                     $(this).toggle(showRow);
                 });
             }
+
+            function checkBottom() {
+                var tableHeight = $('#tableTestCase').height();
+                var scrollPosition = $(window).scrollTop();
+                var windowHeight = $(window).height();
+
+                if (scrollPosition + windowHeight >= tableHeight) {
+                    $('#scrollToBottomBtn').fadeOut();
+                } else {
+                    $('#scrollToBottomBtn').fadeIn();
+                }
+            }
+
+            checkBottom();
+            $(window).scroll(function () {
+                checkBottom();
+            });
+
+            $('#scrollToBottomBtn').click(function () {
+                var tableHeight = $('#tableTestCase').height();
+                $('html, body').animate({ scrollTop: tableHeight }, 'slow');
+            });
         });
     </script>
 

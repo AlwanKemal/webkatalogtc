@@ -24,7 +24,31 @@
                         <span class="ms-2">Export Test Case</span>
                     </a>
                 </li>  
-            @endif           
+            @endif   
+            @if (Auth::user()->role_id == 1)
+                <li class="nav-item mb-2">
+                    <a class="nav-link {{ request()->is('home/showAnalyzeUser') ? 'active' : '' }}"
+                        href="{{ route('home.showAnalyzeUser') }}">
+                        <i class="fas fa-search"></i>
+                        <span class="ms-2">Analyze SRS</span>
+                    </a>
+                </li>    
+                <li class="nav-item mb-2">
+                    <a class="nav-link {{ request()->is('home/profile/' . Auth::user()->id) ? 'active' : '' }}"
+                        href="{{ route('home.profile', Auth::user()->id) }}">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="ms-2">Profile</span>
+                    </a>
+                </li>   
+            @else
+                <li class="nav-item mb-2">
+                    <a class="nav-link {{ request()->is('home/profile/' . Auth::user()->id) ? 'active' : '' }}"
+                        href="{{ route('home.profile', Auth::user()->id) }}">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="ms-2">Profile</span>
+                    </a>
+                </li>  
+            @endif   
         </ul>
     </div>
 </nav>

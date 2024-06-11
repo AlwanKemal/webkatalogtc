@@ -34,17 +34,17 @@
                                 <p class="text-center">There is no selected test cases.</p>
                             </div>
                         @else                           
-                            <table class="table table-striped">
+                            <table class="table table-striped" id="tableTestCaseS">
                                 <thead>
                                     <tr>
                                         <th scope="col">Test Case Domain</th>
+                                        <th scope="col">Pattern</th>
+                                        <th scope="col">Category</th>
                                         <th scope="col">Module Name</th>
                                         <th scope="col">Test Description</th>
                                         <th scope="col">Test Case Type</th>
-                                        <th scope="col">Test Case Step</th>
-                                        <th scope="col">Test Data</th>
+                                        <th scope="col">Test Case Step</th>                                      
                                         <th scope="col">Expected Result</th>
-                                        <th scope="col">Actual Result</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -52,6 +52,14 @@
                                     @foreach($selected_test_cases as $selected_test_case)
                                         <tr>
                                             <td>{{ $selected_test_case->testCase->test_domain }}</td>
+                                            <td>
+                                                @if($selected_test_case->testCase->test_case_pattern)
+                                                    <span class="badge bg-info">Independent</span>
+                                                @else
+                                                    <span class="badge bg-warning">Dependent</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $selected_test_case->testCase->test_data }}</td>
                                             <td>{{ $selected_test_case->testCase->module_name }}</td>
                                             <td>{{ $selected_test_case->testCase->test_description }}</td>
                                             <td>
@@ -61,10 +69,8 @@
                                                     <span class="badge bg-danger">Negative</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $selected_test_case->testCase->test_step }}</td>
-                                            <td><pre>{{ $selected_test_case->testCase->test_data }}</pre></td>
+                                            <td><pre>{{ $selected_test_case->testCase->test_step }}<pre></td>                                           
                                             <td>{{ $selected_test_case->testCase->expected_result }}</td>
-                                            <td>{{ $selected_test_case->testCase->actual_result }}</td>
                                             <td>
                                                 <form method="POST" action="{{ route('home.deleteSelectedTestCase', $selected_test_case->id) }}" class="d-inline">
                                                     @csrf
@@ -99,6 +105,10 @@
         </div>
     </div>
 
+    <button id="scrollToBottomBtn" class="btn btn-primary btn-sm" style="position: fixed; bottom: 20px; right: 20px; display: none;">
+        <i class="fas fa-chevron-down"></i> Scroll to Bottom
+    </button>
+
     <script>
         $(document).ready(function () {
             $('#searchInput').on('keyup', function () {
@@ -116,6 +126,28 @@
                     $(this).toggle(showRow);
                 });
             }
+
+            function checkBottom() {
+                var tableHeight = $('#tableTestCaseS').height();
+                var scrollPosition = $(window).scrollTop();
+                var windowHeight = $(window).height();
+
+                if (scrollPosition + windowHeight >= tableHeight) {
+                    $('#scrollToBottomBtn').fadeOut();
+                } else {
+                    $('#scrollToBottomBtn').fadeIn();
+                }
+            }
+
+            checkBottom();
+            $(window).scroll(function () {
+                checkBottom();
+            });
+            
+            $('#scrollToBottomBtn').click(function () {
+                var tableHeight = $('#tableTestCaseS').height();
+                $('html, body').animate({ scrollTop: tableHeight }, 'slow');
+            });
         });
     </script>
 @endsection

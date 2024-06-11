@@ -8,21 +8,17 @@
     </button>
 
     <div class="navbar-nav">
-      <div class="nav-item text-nowrap d-flex align-items-center ">
+      <div class="nav-item text-nowrap d-flex align-items-center">
         <img src="{{ asset('images/Avatar.png') }}" alt="avatar" width="32px" class="rounded-circle me-2">
-        <div class="order-1 ">
-          <div class="dropdown ">
-            <a class="nav-link px-3 dropdown-toggle" id="dropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ Auth::user()->fullname }}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="{{ route('home.profile', Auth::user()->id) }}">Profile</a>
-              <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-              </form>
-            </div>
-          </div>
+        <div class="order-1 d-flex align-items-center">
+          <span class="nav-link px-3">{{ Auth::user()->fullname }}</span>
+          <a href="#" class="nav-link px-3 text-danger d-flex align-items-center" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="fas fa-sign-out-alt me-1"></i>
+            Logout
+          </a>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+          </form>
         </div>
       </div>
     </div>

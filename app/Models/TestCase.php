@@ -11,12 +11,12 @@ class TestCase extends Model
 
     protected $fillable = [
         'test_domain',
+        'test_case_pattern',
         'module_name',
         'test_description',
         'test_case_type',
         'test_step',
         'test_data',
         'expected_result',
-        'actual_result',
     ];   
 }
