@@ -44,9 +44,9 @@
                                 <table class="table table-striped" id="tableTestCaseA">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Test Case Domain</th>
+                                            <th scope="col">Test Case</th>
                                             <th scope="col">Pattern</th>
-                                            <th scope="col">Category</th>
+                                            <th scope="col">Actor</th>
                                             <th scope="col">Module Name</th>
                                             <th scope="col">Test Description</th>
                                             <th scope="col">Test Case Type</th>
@@ -103,7 +103,7 @@
                                                         @method('PUT')
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label for="test_domain{{$testcase->id}}">Edit Test Domain</label>
+                                                                <label for="test_domain{{$testcase->id}}">Edit Test Case</label>
                                                                 <textarea id="test_domain{{$testcase->id}}" name="test_domain" class="form-control" required>{{ $testcase->test_domain }}</textarea>
                                                             </div>
                                                             <div class="mb-3">
@@ -114,7 +114,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="test_data{{$testcase->id}}">Edit Category</label>
+                                                                <label for="test_data{{$testcase->id}}">Edit Actor</label>
                                                                 <textarea id="test_data{{$testcase->id}}" name="test_data" class="form-control" required>{{ $testcase->test_data }}</textarea>
                                                             </div>
                                                             <div class="mb-3">
@@ -171,29 +171,27 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-                    <div class="d-flex justify-content-end px-3 pb-3">
-                        <form method="GET" action="{{ route('home.filterByModule') }}" class="d-flex">
-                            <div class="input-group" style="width: 170px; margin-right: 10px;">
-                            <span class="input-group-text"><i class="fas fa-filter"></i></span>
-                                <select class="form-select" id="filterValue" name="filterValue">
-                                    <option value=""></option>
-                                    @foreach($distinctModules as $module)
-                                        <option value="{{ $module }}">{{ $module }}</option>
-                                    @endforeach
+                    <div class="card">  
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">List Test Case</h3>
+                            <div class="input-group" style="width: 180px;">
+                                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                                <select class="form-select" id="filterType">
+                                    <option value="default">Default</option>
+                                    <option value="domain">Test Case</option>
+                                    <option value="module">Module</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                            <a href="{{ route('home') }}" class="btn btn-secondary ms-2">default</a>
-                        </form>
-                    </div>
-                    <div class="card">  
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">List Test Case</h3>                     
-                        <div class="input-group" style="width: 200px;">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                            <div class="input-group" style="width: 200px;">
+                                <label class="input-group-text" for="filterValue">Value</label>
+                                <select class="form-select" id="filterValue" disabled>
+                                </select>
+                            </div>
+                            <div class="input-group" style="width: 200px;">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                            </div>
                         </div>
-                    </div>
                         <div class="card-body" style="overflow-x: auto;">
                             @if ($data_testcase->isEmpty())
                                 <div class="alert alert-danger" role="alert">
@@ -208,9 +206,9 @@
                                         <thead>
                                             <tr> 
                                                 <th scope="col">Select</th>                
-                                                <th scope="col">Test Case Domain</th>
+                                                <th scope="col">Test Case</th>
                                                 <th scope="col">Pattern</th>
-                                                <th scope="col">Category</th>
+                                                <th scope="col">Actor</th>
                                                 <th scope="col">Module Name</th>
                                                 <th scope="col">Test Description</th>
                                                 <th scope="col">Test Case Type</th>
@@ -278,7 +276,7 @@
                     <form action="{{ route('home.addTestCase') }}" method="post" >
                         @csrf
                         <div class="mb-3">
-                            <label for="test_domain" class="form-label">Test Case Domain</label>
+                            <label for="test_domain" class="form-label">Test Case</label>
                             <input type="text" class="form-control" id="test_domain" name="test_domain" required>
                         </div>
                         <div class="mb-3">
@@ -289,7 +287,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="test_data" class="form-label">Category</label>
+                            <label for="test_data" class="form-label">Actor</label>
                             <textarea class="form-control" id="test_data" name="test_data" required> </textarea>
                         </div>
                         <div class="mb-3">
@@ -325,46 +323,95 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            $('#tableTestCaseA').DataTable();
-            $('#searchInput').on('keyup', function () {
-                var searchText = $(this).val().toLowerCase();
-                filterData(searchText);
-            });
-
-            function filterData(searchText) {
-                $('tbody tr').filter(function () {
-                    var rowText = $(this).text().toLowerCase();
-                    var showRow = true;
-                    if (searchText !== '') {
-                        showRow = rowText.indexOf(searchText) > -1;
-                    }
-                    $(this).toggle(showRow);
-                });
-            }
-
-            function checkBottom() {
-                var tableHeight = $('#tableTestCase').height();
-                var scrollPosition = $(window).scrollTop();
-                var windowHeight = $(window).height();
-
-                if (scrollPosition + windowHeight >= tableHeight) {
-                    $('#scrollToBottomBtn').fadeOut();
-                } else {
-                    $('#scrollToBottomBtn').fadeIn();
-                }
-            }
-
-            checkBottom();
-            $(window).scroll(function () {
-                checkBottom();
-            });
-
-            $('#scrollToBottomBtn').click(function () {
-                var tableHeight = $('#tableTestCase').height();
-                $('html, body').animate({ scrollTop: tableHeight }, 'slow');
-            });
+        $(document).ready(function () {   
+        $('#tableTestCaseA').DataTable(); 
+        $('#searchInput').on('keyup', function () {
+            var searchText = $(this).val().toLowerCase();
+            filterData(searchText);
         });
+
+        $('#filterType').change(function() {
+            var selectedFilter = $(this).val();
+            if (selectedFilter === 'default') {
+                $('#filterValue').empty().attr('disabled', true);
+                filterData('');
+            } else {
+                populateFilterOptions(selectedFilter);
+                $('#filterValue').attr('disabled', false).val('').focus();
+            }
+        });
+
+        $('#filterValue').change(function() {
+            var filterValue = $(this).val();
+            filterDataByFilterValue(filterValue);
+        });
+
+        function populateFilterOptions(filterType) {
+            var options = [];
+            var data = {!! json_encode($data_testcase) !!};
+
+            var select = $('#filterValue');
+            select.empty().attr('disabled', true);
+
+            if (filterType === 'domain') {
+                options = [...new Set(data.map(item => item.test_domain))];
+            } else if (filterType === 'module') {
+                options = [...new Set(data.map(item => item.module_name))];
+            }
+
+            $.each(options, function(index, value) {
+                select.append('<option value="' + value + '">' + value + '</option>');
+            });
+            select.attr('disabled', false);
+        }
+
+        function filterData(searchText) {
+            var filterValue = $('#filterValue').val();
+            var dataRows = $('tbody tr');
+
+            dataRows.each(function () {
+                var rowText = $(this).text().toLowerCase();
+                var showRow = true;
+                if (searchText !== '') {
+                    showRow = rowText.indexOf(searchText) > -1;
+                }
+                if ($('#filterType').val() !== 'default' && filterValue !== '') {
+                    var filterColumnIndex = $('#filterType').val() === 'domain' ? 1 : 4;
+                    var filterText = $(this).find('td:eq(' + filterColumnIndex + ')').text().toLowerCase();
+                    showRow = showRow && filterText.includes(filterValue.toLowerCase());
+                }
+                $(this).toggle(showRow);
+            });
+        }
+
+        function filterDataByFilterValue(filterValue) {
+            var searchText = $('#searchInput').val().toLowerCase();
+            filterData(searchText);
+        }
+
+        function checkBottom() {
+            var tableHeight = $('#tableTestCase').height();
+            var scrollPosition = $(window).scrollTop();
+            var windowHeight = $(window).height();
+
+            if (scrollPosition + windowHeight >= tableHeight) {
+                $('#scrollToBottomBtn').fadeOut();
+            } else {
+                $('#scrollToBottomBtn').fadeIn();
+            }
+        }
+
+        checkBottom();
+
+        $(window).scroll(function () {
+            checkBottom();
+        });
+
+        $('#scrollToBottomBtn').click(function () {
+            var tableHeight = $('#tableTestCase').height();
+            $('html, body').animate({ scrollTop: tableHeight }, 'slow');
+        });
+    });
     </script>
 
 @endsection

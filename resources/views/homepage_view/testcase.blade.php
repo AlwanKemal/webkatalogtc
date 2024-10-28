@@ -27,7 +27,7 @@
                             <table class="table table-striped" id="tableTestCase">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Test Case Domain</th>
+                                        <th scope="col">Test Case</th>
                                         <th scope="col">Module Name</th>
                                         <th scope="col">Test Description</th>
                                         <th scope="col">Test Case Type</th>
@@ -74,7 +74,7 @@
                                                     @method('PUT')
                                                     <div class="modal-body">
                                                         <div class="mb-3">
-                                                            <label for="test_domain{{$testcase->id}}">Edit Test Domain</label>
+                                                            <label for="test_domain{{$testcase->id}}">Edit Test Case</label>
                                                             <textarea id="test_domain{{$testcase->id}}" name="test_domain" class="form-control" required>{{ $testcase->test_domain }}</textarea>
                                                         </div>
                                                         <div class="mb-3">
@@ -140,7 +140,7 @@
                     <form action="{{ route('home.addTestCase') }}" method="post" >
                         @csrf
                         <div class="mb-3">
-                            <label for="test_domain" class="form-label">Test Case Domain</label>
+                            <label for="test_domain" class="form-label">Test Case</label>
                             <input type="text" class="form-control" id="test_domain" name="test_domain" required>
                         </div>
                         <div class="mb-3">

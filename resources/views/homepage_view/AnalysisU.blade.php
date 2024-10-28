@@ -15,11 +15,11 @@
                         <form method="POST" action="{{ route('home.analyzeSRSU') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
-                                <label for="product_name" class="form-label">Nama produk/software</label>
+                                <label for="product_name" class="form-label">Product/software name</label>
                                 <input type="text" class="form-control" id="product_name" name="product_name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="roles_involved" class="form-label">Role yang terlibat dalam produk/software (gunakan koma jika lebih dari satu)</label>
+                                <label for="roles_involved" class="form-label">Role involved in the product/software (use comma if more than one)</label>
                                 <input type="text" class="form-control" id="roles_involved" name="roles_involved" required>
                             </div>
                             <div class="mb-3">
