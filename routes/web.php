@@ -48,5 +48,4 @@ use Illuminate\Support\Facades\Route;
     Route::get('home/filteredTestCase', [App\Http\Controllers\HomeController::class, 'filteredTestCase'])->name('home.filteredTestCase');
     Route::post('home/searchSentence', [App\Http\Controllers\HomeController::class, 'searchSentence'])->name('home.searchSentence');
     Route::post('home/saveSelectedTestCase', [App\Http\Controllers\HomeController::class, 'saveSelectedTestCase'])->name('home.saveSelectedTestCase');
-    Route::get('home/filterByModule', [App\Http\Controllers\HomeController::class, 'filterByModule'])->name('home.filterByModule');
 });

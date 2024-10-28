@@ -37,9 +37,9 @@
                             <table class="table table-striped" id="tableTestCaseS">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Test Case Domain</th>
+                                        <th scope="col">Test Case</th>
                                         <th scope="col">Pattern</th>
-                                        <th scope="col">Category</th>
+                                        <th scope="col">Actor</th>
                                         <th scope="col">Module Name</th>
                                         <th scope="col">Test Description</th>
                                         <th scope="col">Test Case Type</th>

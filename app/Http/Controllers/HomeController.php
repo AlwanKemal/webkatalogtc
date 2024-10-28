@@ -26,27 +26,13 @@ class HomeController extends Controller
     public function index()
     {
         $data_testcase = TestCase::all();
-        $distinctModules = TestCase::distinct()->pluck('module_name');
-        return view('homepage_view.home', compact('data_testcase', 'distinctModules'));
+        return view('homepage_view.home', compact('data_testcase'));
     }
 
     public function profile($id)
     {
         $user = User::find($id);
         return view('homepage_view.profil', compact('user'));
-    }
-
-    public function filterByModule(Request $request)
-    {
-        $module = $request->input('filterValue');
-        if ($module) {
-            $data_testcase = TestCase::where('module_name', $module)->get();
-        } else {
-            $data_testcase = TestCase::all();
-        }
-
-        $distinctModules = TestCase::distinct()->pluck('module_name');
-        return view('homepage_view.home', compact('data_testcase', 'distinctModules'));
     }
 
     public function addTestCase(Request $request)
@@ -249,8 +235,9 @@ class HomeController extends Controller
         ]);
 
         $text = Pdf::getText($request->file('srs_file'));
-        $product_name = $request->input('product_name');
-        $roles_involved = $request->input('roles_involved');
+        $product_name = strtolower($request->input('product_name'));
+        $roles_involved = strtolower($request->input('roles_involved'));
+        $text = strtolower($text);
         $roles_involved_array = explode(',', $roles_involved);
 
         foreach ($roles_involved_array as $role) {
@@ -272,7 +259,7 @@ class HomeController extends Controller
 
         $translatedSentences = [];
         foreach ($matchedSentences as $sentence) {
-            $translatedSentence = NLP::translate($sentence, 'en', 'id');
+            $translatedSentence = NLP::translate($sentence, 'id', 'en');
             $translatedSentences[] = $translatedSentence;
         }
 
