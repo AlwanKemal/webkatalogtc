@@ -1,7 +1,5 @@
 # Baca Sebelum RUN
 
-This is a Laravel project for ngebengkel.
-
 ## Before Running
 
 1. Make sure you have Composer installed on your system.
@@ -9,13 +7,6 @@ This is a Laravel project for ngebengkel.
 3. Run `php artisan migrate` to migrate the database schema.
 4. Run `php artisan db:seed` to seed the database with sample data.
 5. Run `php artisan key:generate` before running the project
-
-## Usage
-
-To login as an admin, use the following credentials:
-
-- Username: admin
-- Password: admin
 
 ## About Laravel
 
